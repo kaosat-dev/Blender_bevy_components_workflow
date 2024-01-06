@@ -28,8 +28,9 @@ pub fn track_new_gltf(
     mut events: EventReader<AssetEvent<Gltf>>,
     asset_server: Res<AssetServer>,
 ) {
+    println!("tracking");
     for event in events.read() {
-        if let AssetEvent::Added { id } = event {
+        if let AssetEvent::LoadedWithDependencies { id } = event {
             let handle = asset_server
                 .get_id_handle(*id)
                 .expect("this gltf should have been loaded");

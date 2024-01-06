@@ -21,8 +21,8 @@ use bevy::prelude::{App, IntoSystemConfigs, Plugin, SystemSet, Update};
 /// fn main() {
 ///    App::new()
 ///         .add_plugins(DefaultPlugins)
-///         .add_plugin(ComponentsFromGltfPlugin)
-///         .add_system(spawn_level)
+///         .add_plugins(ComponentsFromGltfPlugin)
+///         .add_systems(Update, spawn_level)
 ///         .run();
 /// }
 ///
