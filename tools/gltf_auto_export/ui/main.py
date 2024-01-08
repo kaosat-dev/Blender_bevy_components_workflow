@@ -302,6 +302,7 @@ class GLTF_PT_auto_export_blueprints(bpy.types.Panel):
         layout.prop(operator, "export_blueprints_path")
         layout.prop(operator, "collection_instances_combine_mode")
         layout.prop(operator, "export_marked_assets")
+        layout.prop(operator, "split_out_dynamic_collections")
         layout.separator()
         # materials
         layout.prop(operator, "export_materials_library")

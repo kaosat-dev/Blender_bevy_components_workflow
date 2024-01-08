@@ -88,7 +88,7 @@ pub fn spawn_test(
     }
 }
 
-pub fn spawn_test_failing(
+pub fn spawn_test_unregisted_components(
     keycode: Res<Input<KeyCode>>,
     mut commands: Commands,
 

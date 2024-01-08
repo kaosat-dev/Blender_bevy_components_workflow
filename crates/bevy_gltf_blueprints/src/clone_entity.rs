@@ -28,20 +28,47 @@ impl CloneEntity {
                 .expect("source entity should exist")
                 .archetype()
                 .components()
-                .map(|component_id| {
+                .filter_map(|component_id| {
                     let component_info = world
                         .components()
                         .get_info(component_id)
                         .expect("component info should be available");
 
+                    // FIXME: do something cleaner
+                    if component_info.name() == "bevy_hierarchy::components::parent::Parent" {
+                        return None;
+                    }
+
+                    if component_info.name() == "bevy_hierarchy::components::children::Children" {
+                        return None;
+                    }
+
+                    if component_info.name() == "bevy_transform::components::transform::Transform" {
+                        return None;
+                    }
+                    if component_info.name()
+                        == "bevy_transform::components::transform::GlobalTransform"
+                    {
+                        return None;
+                    }
+                    // println!("cloning: component: {:?}",component_info.name());
+
                     let type_id = component_info.type_id().unwrap();
-                    let type_id = registry.get(type_id).expect(
+
+                    return registry.get(type_id);
+                    /*if let Some(type_id) = registry.get(type_id) {
+                        return type_id.data::<ReflectComponent>().unwrap().clone();
+                    }*/
+                    /*let type_id = registry.get(type_id).expect(
                         format!(
                             "cannot clone entity: component: {:?} is not registered",
                             component_info.name()
                         )
                         .as_str(),
-                    );
+                    );*/
+                    // return type_id.data::<ReflectComponent>().unwrap().clone();
+                })
+                .map(|type_id| {
                     return type_id.data::<ReflectComponent>().unwrap().clone();
                 })
                 .collect::<Vec<_>>()
@@ -53,11 +80,19 @@ impl CloneEntity {
                 .unwrap()
                 .clone_value();
 
+            // println!("FOO {:?}", source);
+
             let mut destination = world
                 .get_entity_mut(self.destination)
                 .expect("destination entity should exist");
 
-            component.apply_or_insert(&mut destination, &*source);
+            //if destination.contains::comp
+            //component.insert(&mut destination, &*source);
+            if !destination.contains_type_id(source.type_id()) {
+                // println!("copying {:?}", source);
+                component.apply_or_insert(&mut destination, &*source);
+            }
+            // component.apply_or_insert(&mut destination, &*source);
         }
     }
 }

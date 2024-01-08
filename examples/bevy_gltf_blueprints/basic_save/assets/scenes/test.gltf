@@ -1,0 +1,24 @@
+{
+  "asset": {
+    "version": "2.0"
+  },
+  "nodes": [
+    {
+      "extras": {"a":1,"b":2,"BlueprintName":"Foo","SpawnHere":""},
+      "name": "yeah",
+      "translation": [
+        0.5,
+        10.0,
+        -100.0
+      ]
+    }
+  ],
+  "scenes": [
+    {
+      "name": "Foo",
+      "nodes": [
+        0
+      ]
+    }
+  ]
+}

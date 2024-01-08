@@ -1,0 +1,18 @@
+[package]
+name = "bevy_gltf_save_load"
+version = "0.0.1"
+authors = ["Mark 'kaosat-dev' Moissette"]
+description = "Save & load your bevy games"
+homepage = "https://github.com/kaosat-dev/Blender_bevy_components_workflow"
+repository = "https://github.com/kaosat-dev/Blender_bevy_components_workflow"
+keywords = ["gamedev", "bevy", "assets", "gltf", "components", "save", "load", "serialize"]
+categories = ["game-development"]
+edition = "2021"
+license = "MIT OR Apache-2.0"
+
+[dev-dependencies]
+bevy = { version = "0.12", default-features = false, features = ["bevy_asset", "bevy_scene", "bevy_gltf"] }
+
+[dependencies]
+bevy = { version = "0.12", default-features = false, features = ["bevy_asset", "bevy_scene", "bevy_gltf"] }
+bevy_gltf_blueprints = { path = "../bevy_gltf_blueprints" }

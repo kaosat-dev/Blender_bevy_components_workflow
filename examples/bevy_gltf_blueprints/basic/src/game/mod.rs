@@ -104,7 +104,7 @@ impl Plugin for GamePlugin {
                     player_move_demo, //.run_if(in_state(AppState::Running)),
                     // test_collision_events
                     spawn_test,
-                    spawn_test_failing,
+                    spawn_test_unregisted_components,
                 )
                     .run_if(in_state(GameState::InGame)),
             )

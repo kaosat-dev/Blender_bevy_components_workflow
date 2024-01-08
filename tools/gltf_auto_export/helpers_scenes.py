@@ -4,7 +4,7 @@ from .helpers import (make_empty3)
 
 # generate a copy of a scene that replaces collection instances with empties
 # copy original names before creating a new scene, & reset them
-def generate_hollow_scene(scene, library_collections, addon_prefs): 
+def generate_hollow_scene(scene, library_collections, addon_prefs, filter=None): 
     collection_instances_combine_mode = getattr(addon_prefs, "collection_instances_combine_mode")
 
     root_collection = scene.collection 
@@ -29,6 +29,8 @@ def generate_hollow_scene(scene, library_collections, addon_prefs):
     # copies the contents of a collection into another one while replacing library instances with empties
     def copy_hollowed_collection_into(source_collection, destination_collection, parent_empty=None):
         for object in source_collection.objects:
+            if filter is not None and filter(object) is False:
+                continue
             #check if a specific collection instance does not have an ovveride for combine_mode
             combine_mode = object['_combine'] if '_combine' in object else collection_instances_combine_mode
 
@@ -75,17 +77,6 @@ def generate_hollow_scene(scene, library_collections, addon_prefs):
 
             copy_hollowed_collection_into(collection, destination_collection, collection_placeholder)
             
-            
-            """
-            copy_collection = bpy.data.collections.new(collection.name + "____collection_export")
-            # save the newly created collection for later reuse
-            temporary_collections.append(copy_collection)
-
-            # copy & link objects
-            copy_hollowed_collection_into(collection, copy_collection)
-            destination_collection.children.link(copy_collection)
-            """
-
     copy_hollowed_collection_into(root_collection, copy_root_collection)
     
     return (temp_scene, temporary_collections, root_objects, special_properties)
