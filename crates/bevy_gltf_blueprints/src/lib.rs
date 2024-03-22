@@ -123,7 +123,11 @@ impl Plugin for BlueprintsPlugin {
         .register_type::<BlueprintName>()
         .register_type::<MaterialInfo>()
         .register_type::<SpawnHere>()
-        .register_type::<Animations>()
+
+        .register_type::<BlueprintAnimations>()
+        .register_type::<InstanceAnimations>()
+        .register_type::<Animated>()
+
         .register_type::<BlueprintsList>()
         .register_type::<Vec<String>>()
         .register_type::<HashMap<String, Vec<String>>>()

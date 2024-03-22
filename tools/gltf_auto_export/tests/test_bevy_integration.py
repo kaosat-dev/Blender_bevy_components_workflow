@@ -5,6 +5,7 @@ import json
 import pytest
 import shutil
 
+import filecmp
 from PIL import Image
 from pixelmatch.contrib.PIL import pixelmatch
 
@@ -29,6 +30,10 @@ def setup_data(request):
         diagnostics_file_path = os.path.join(root_path, "bevy_diagnostics.json")
         if os.path.exists(diagnostics_file_path):
             os.remove(diagnostics_file_path)
+        
+        hierarchy_file_path = os.path.join(root_path, "bevy_hierarchy.json")
+        if os.path.exists(hierarchy_file_path):
+            os.remove(hierarchy_file_path)
 
         screenshot_observed_path = os.path.join(root_path, "screenshot.png")
         if os.path.exists(screenshot_observed_path):
@@ -56,7 +61,8 @@ def test_export_complex(setup_data):
     # we use the global settings for that
     export_props = {
         "main_scene_names" : ['World'],
-        "library_scene_names": ['Library']
+        "library_scene_names": ['Library'],
+        # "export_format":'GLTF_SEPARATE'
     }
     stored_settings = bpy.data.texts[".gltf_auto_export_settings"] if ".gltf_auto_export_settings" in bpy.data.texts else bpy.data.texts.new(".gltf_auto_export_settings")
     stored_settings.clear()
@@ -107,9 +113,15 @@ def test_export_complex(setup_data):
         diagnostics = json.load(diagnostics_file)
         print("diagnostics", diagnostics)
         assert diagnostics["animations"] == True
-        assert diagnostics["cylinder_found"] == True
         assert diagnostics["empty_found"] == True
         assert diagnostics["blueprints_list_found"] == True
+        assert diagnostics["exported_names_correct"] == True
+
+    with open(os.path.join(root_path, "bevy_hierarchy.json")) as hierarchy_file:
+        with open(os.path.join(os.path.dirname(__file__), "expected_bevy_hierarchy.json")) as expexted_hierarchy_file:
+            hierarchy = json.load(hierarchy_file)
+            expected = json.load(expexted_hierarchy_file)
+            assert sorted(hierarchy.items()) == sorted(expected.items())
 
     # last but not least, do a visual compare
     screenshot_expected_path = os.path.join(root_path, "expected_screenshot.png")

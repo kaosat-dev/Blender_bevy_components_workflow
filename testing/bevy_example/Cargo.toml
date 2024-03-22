@@ -14,3 +14,4 @@ bevy_rapier3d = { version = "0.25.0", features = ["serde-serialize", "debug-rend
 bevy_asset_loader = { version = "0.20", features = ["standard_dynamic_assets"] }
 bevy_editor_pls = { version = "0.8" }
 rand = "0.8.5"
+json-writer ="0.3"

@@ -1,5 +1,7 @@
 import os
 import bpy
+
+from .get_standard_exporter_settings import get_standard_exporter_settings
 from .preferences import (AutoExportGltfPreferenceNames)
 
 def generate_gltf_export_preferences(addon_prefs): 
@@ -37,10 +39,31 @@ def generate_gltf_export_preferences(addon_prefs):
         export_optimize_animation_size=False
     )
         
+
+   
+
     for key in addon_prefs.__annotations__.keys():
         if str(key) not in AutoExportGltfPreferenceNames:
             #print("overriding setting", key, "value", getattr(addon_prefs,key))
-            gltf_export_preferences[key] = getattr(addon_prefs,key)
+            gltf_export_preferences[key] = getattr(addon_prefs, key)
+
+
+    """standard_gltf_exporter_settings = get_standard_exporter_settings()
+    print("standard settings", standard_gltf_exporter_settings)
+    
+    constant_keys = [
+        'export_cameras',
+        'export_extras', # For custom exported properties.
+        'export_lights',
+    ]
+
+    # a certain number of essential params should NEVER be overwritten , no matter the settings of the standard exporter
+    for key in standard_gltf_exporter_settings.keys():
+        if str(key) not in constant_keys:
+            gltf_export_preferences[key] =  standard_gltf_exporter_settings.get(key)
+
+    print("final export preferences", gltf_export_preferences)"""
+
 
     return gltf_export_preferences
 
