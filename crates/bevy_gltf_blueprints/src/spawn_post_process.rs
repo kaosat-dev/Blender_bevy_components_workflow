@@ -5,7 +5,7 @@ use bevy::prelude::*;
 use bevy::scene::SceneInstance;
 // use bevy::utils::hashbrown::HashSet;
 
-use super::{AnimationPlayerLink, Animations};
+use super::{BlueprintAnimationPlayerLink, BlueprintAnimations};
 use super::{SpawnHere, Spawned};
 use crate::{
     AssetsToLoad, BlueprintAssetsLoaded, CopyComponents, InBlueprint, NoInBlueprint,
@@ -24,7 +24,7 @@ pub(crate) fn spawned_blueprint_post_process(
             Entity,
             &Children,
             &OriginalChildren,
-            &Animations,
+            &BlueprintAnimations,
             Option<&NoInBlueprint>,
             Option<&Name>,
         ),
@@ -85,7 +85,9 @@ pub(crate) fn spawned_blueprint_post_process(
                     // FIXME: stopgap solution: since we cannot use an AnimationPlayer at the root entity level
                     // and we cannot update animation clips so that the EntityPaths point to one level deeper,
                     // BUT we still want to have some marker/control at the root entity level, we add this
-                    commands.entity(original).insert(AnimationPlayerLink(added));
+                    commands
+                        .entity(original)
+                        .insert(BlueprintAnimationPlayerLink(added));
                 }
             }
         }

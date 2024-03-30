@@ -19,7 +19,6 @@ def setup_data(request):
 
     def finalizer():
         print("\nPerforming teardown...")
-        get_orphan_data()
 
         if os.path.exists(models_path):
             shutil.rmtree(models_path)
@@ -38,7 +37,10 @@ def setup_data(request):
 
 def get_orphan_data():
     orphan_meshes = [m.name for m in bpy.data.meshes if m.users == 0]
-    # print("orphan meshes before", orphan_meshes)
+    orphan_objects = [m.name for m in bpy.data.objects if m.users == 0]
+
+    #print("orphan meshes before", orphan_meshes)
+    return orphan_meshes + orphan_objects
 
 def test_export_do_not_export_blueprints(setup_data):
     auto_export_operator = bpy.ops.export_scenes.auto_gltf
@@ -61,6 +63,9 @@ def test_export_do_not_export_blueprints(setup_data):
     )
     assert os.path.exists(os.path.join(setup_data["models_path"], "World.glb")) == True
     assert os.path.exists(os.path.join(setup_data["models_path"], "library", "Blueprint1.glb")) == False
+    orphan_data = get_orphan_data()
+    assert len(orphan_data) == 0
+
 
 def test_export_custom_blueprints_path(setup_data):
     auto_export_operator = bpy.ops.export_scenes.auto_gltf
@@ -83,6 +88,7 @@ def test_export_custom_blueprints_path(setup_data):
     )
     assert os.path.exists(os.path.join(setup_data["models_path"], "World.glb")) == True
     assert os.path.exists(os.path.join(setup_data["models_path"], "another_library_path", "Blueprint1.glb")) == True
+    assert len(get_orphan_data()) == 0
 
 def test_export_materials_library(setup_data):
     auto_export_operator = bpy.ops.export_scenes.auto_gltf
@@ -107,7 +113,7 @@ def test_export_materials_library(setup_data):
 
     assert os.path.exists(os.path.join(setup_data["models_path"], "library", "Blueprint1.glb")) == True
     assert os.path.exists(os.path.join(setup_data["materials_path"], "testing_materials_library.glb")) == True
-
+    assert len(get_orphan_data()) == 0
 
 def test_export_materials_library_custom_path(setup_data):
     auto_export_operator = bpy.ops.export_scenes.auto_gltf
@@ -134,6 +140,7 @@ def test_export_materials_library_custom_path(setup_data):
     assert os.path.exists(os.path.join(setup_data["models_path"], "library", "Blueprint1.glb")) == True
     assert os.path.exists(os.path.join(setup_data["materials_path"], "testing_materials_library.glb")) == False
     assert os.path.exists(os.path.join(setup_data["other_materials_path"], "testing_materials_library.glb")) == True
+    assert len(get_orphan_data()) == 0
 
 def test_export_collection_instances_combine_mode(setup_data): # TODO: change & check this
     auto_export_operator = bpy.ops.export_scenes.auto_gltf
@@ -160,6 +167,7 @@ def test_export_collection_instances_combine_mode(setup_data): # TODO: change & 
 
     assert os.path.exists(os.path.join(setup_data["models_path"], "World.glb")) == True
     assert os.path.exists(os.path.join(setup_data["models_path"], "World_dynamic.glb")) == False
+    assert len(get_orphan_data()) == 0
 
 
 def test_export_do_not_export_marked_assets(setup_data):
@@ -188,6 +196,7 @@ def test_export_do_not_export_marked_assets(setup_data):
     assert os.path.exists(os.path.join(setup_data["models_path"], "library", "Blueprint3.glb")) == True
     assert os.path.exists(os.path.join(setup_data["models_path"], "library", "Blueprint4_nested.glb")) == True
     assert os.path.exists(os.path.join(setup_data["models_path"], "library", "Blueprint5.glb")) == False
+    assert len(get_orphan_data()) == 0
 
 
 def test_export_separate_dynamic_and_static_objects(setup_data):
@@ -216,6 +225,7 @@ def test_export_separate_dynamic_and_static_objects(setup_data):
 
     assert os.path.exists(os.path.join(setup_data["models_path"], "World.glb")) == True
     assert os.path.exists(os.path.join(setup_data["models_path"], "World_dynamic.glb")) == True
+    assert len(get_orphan_data()) == 0
 
 
 def test_export_should_not_generate_orphan_data(setup_data):
@@ -239,4 +249,5 @@ def test_export_should_not_generate_orphan_data(setup_data):
     )
     assert os.path.exists(os.path.join(setup_data["models_path"], "World.glb")) == True
     assert os.path.exists(os.path.join(setup_data["models_path"], "library", "Blueprint1.glb")) == False
+    assert len(get_orphan_data()) == 0
 

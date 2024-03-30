@@ -20,87 +20,149 @@ def remove_unwanted_custom_properties(object):
     for component_name in object.keys():
         if not is_component_valid(object, component_name):
             to_remove.append(component_name)
-    
     for cp in custom_properties_to_filter_out + to_remove:
         if cp in object:
             del object[cp]
 
-def duplicate_object(object):
-    obj_copy = object.copy()
-    if object.data:
-        data = object.data.copy()
-        obj_copy.data = data
-    if object.animation_data and object.animation_data.action:
-        obj_copy.animation_data.action = object.animation_data.action.copy()
-    return obj_copy
+# TODO: rename actions ?
+# reference https://github.com/KhronosGroup/glTF-Blender-IO/blob/main/addons/io_scene_gltf2/blender/exp/animation/gltf2_blender_gather_action.py#L481
+def copy_animation_data(source, target):
+    if source.animation_data and source.animation_data:
+        ad = source.animation_data
 
-#also removes unwanted custom_properties for all objects in hiearchy
-def duplicate_object_recursive(object, parent, collection):
-    original_name = object.name
-    object.name = original_name + "____bak"
-    copy = duplicate_object(object)
-    copy.name = original_name
-    collection.objects.link(copy)
+        blender_actions = []
+        blender_tracks = {}
 
-    remove_unwanted_custom_properties(copy)
+        # TODO: this might need to be modified/ adapted to match the standard gltf exporter settings
+        for track in ad.nla_tracks:
+            non_muted_strips = [strip for strip in track.strips if strip.action is not None and strip.mute is False]
+            for strip in non_muted_strips: #t.strips:
+                # print("  ", source.name,'uses',strip.action.name, "active", strip.active, "action", strip.action)
+                blender_actions.append(strip.action)
+                blender_tracks[strip.action.name] = track.name
 
-    if parent:
+        # Remove duplicate actions.
+        blender_actions = list(set(blender_actions))
+        # sort animations alphabetically (case insensitive) so they have a defined order and match Blender's Action list
+        blender_actions.sort(key = lambda a: a.name.lower())
+        
+        markers_per_animation = {}
+        animations_infos = []
+
+        for action in blender_actions:
+            animation_name = blender_tracks[action.name]
+            animations_infos.append(
+                f'(name: "{animation_name}", frame_start: {action.frame_range[0]}, frame_end: {action.frame_range[1]}, frames_length: {action.frame_range[1] - action.frame_range[0]}, frame_start_override: {action.frame_start}, frame_end_override: {action.frame_end})'
+            )
+            markers_per_animation[animation_name] = {}
+
+            for marker in action.pose_markers:
+                if marker.frame not in markers_per_animation[animation_name]:
+                    markers_per_animation[animation_name][marker.frame] = []
+                markers_per_animation[animation_name][marker.frame].append(marker.name)
+
+        """if target.animation_data == None:
+            target.animation_data_create()
+        target.animation_data.action = source.animation_data.action.copy()"""
+        # alternative method, using the built-in link animation operator
+        with bpy.context.temp_override(active_object=source, selected_editable_objects=[target]): 
+            bpy.ops.object.make_links_data(type='ANIMATION')
+        # we add an "AnimationInfos" component 
+        target['AnimationInfos'] = f'(animations: {animations_infos})'.replace("'","")
+        
+        markers_formated = '{'
+        for animation in markers_per_animation.keys():
+            markers_formated += f'"{animation}":'
+            markers_formated += "{"
+            for frame in markers_per_animation[animation].keys():
+                markers = markers_per_animation[animation][frame]
+                markers_formated += f"{frame}:{markers}, ".replace("'", '"')
+            markers_formated += '}, '             
+        markers_formated += '}' 
+        target["AnimationMarkers"] = f'( {markers_formated} )'
+        
+        """print("copying animation data for", source.name, target.animation_data)
+        properties = [p.identifier for p in source.animation_data.bl_rna.properties if not p.is_readonly]
+        for prop in properties:
+            print("copying stuff", prop)
+            setattr(target.animation_data, prop, getattr(source.animation_data, prop))"""
+        
+
+
+def duplicate_object(object, parent, combine_mode, destination_collection, library_collections, legacy_mode, nester=""):
+    copy = None
+    if object.instance_type == 'COLLECTION' and (combine_mode == 'Split' or (combine_mode == 'EmbedExternal' and (object.instance_collection.name in library_collections)) ): 
+        #print("creating empty for", object.name, object.instance_collection.name, library_collections, combine_mode)
+        collection_name = object.instance_collection.name
+        original_name = object.name
+
+        object.name = original_name + "____bak"
+        empty_obj = make_empty(original_name, object.location, object.rotation_euler, object.scale, destination_collection)
+        """we inject the collection/blueprint name, as a component called 'BlueprintName', but we only do this in the empty, not the original object"""
+        empty_obj['BlueprintName'] = '"'+collection_name+'"' if legacy_mode else '("'+collection_name+'")'
+        empty_obj['SpawnHere'] = '()'
+
+        # we also inject a list of all sub blueprints, so that the bevy side can preload them
+        if not legacy_mode:
+            root_node = CollectionNode()
+            root_node.name = "root"
+            children_per_collection = {}
+            get_sub_collections([object.instance_collection], root_node, children_per_collection)
+            empty_obj["BlueprintsList"] = f"({json.dumps(dict(children_per_collection))})"
+
+            # empty_obj["AnimationMarkers"] = '({"animation_name": {5: "Marker_1"} })'
+
+            #'({5: "sdf"})'#.replace('"',"'") #f"({json.dumps(dict(animation_foo))})"
+            #empty_obj["Assets"] = {"Animations": [], "Materials": [], "Models":[], "Textures":[], "Audio":[], "Other":[]}
+        
+        # we copy custom properties over from our original object to our empty
+        for component_name, component_value in object.items():
+            if component_name not in custom_properties_to_filter_out and is_component_valid(object, component_name): #copy only valid properties
+                empty_obj[component_name] = component_value
+        copy = empty_obj
+    else:
+        # for objects which are NOT collection instances     
+        # we create a copy of our object and its children, to leave the original one as it is
+        original_name = object.name
+        object.name = original_name + "____bak"
+        copy = object.copy()
+        copy.name = original_name
+
+
+        destination_collection.objects.link(copy)
+
+        """if object.parent == None:
+            if parent_empty is not None:
+                copy.parent = parent_empty
+           """
+
+    # print(nester, "copy", copy)
+    # do this both for empty replacements & normal copies
+    if parent is not None:
         copy.parent = parent
+    remove_unwanted_custom_properties(copy)
+    copy_animation_data(object, copy)
 
     for child in object.children:
-        duplicate_object_recursive(child, copy, collection)
-    return copy
-
+        duplicate_object(child, copy, combine_mode, destination_collection, library_collections, legacy_mode, nester+"  ")
 
 # copies the contents of a collection into another one while replacing library instances with empties
 def copy_hollowed_collection_into(source_collection, destination_collection, parent_empty=None, filter=None, library_collections=[], addon_prefs={}):
     collection_instances_combine_mode = getattr(addon_prefs, "collection_instances_combine_mode")
     legacy_mode = getattr(addon_prefs, "export_legacy_mode")
     collection_instances_combine_mode= collection_instances_combine_mode
+
     for object in source_collection.objects:
+        if object.name.endswith("____bak"): # some objects could already have been handled, ignore them
+            continue       
         if filter is not None and filter(object) is False:
             continue
         #check if a specific collection instance does not have an ovveride for combine_mode
         combine_mode = object['_combine'] if '_combine' in object else collection_instances_combine_mode
-
-        if object.instance_type == 'COLLECTION' and (combine_mode == 'Split' or (combine_mode == 'EmbedExternal' and (object.instance_collection.name in library_collections)) ): 
-            #print("creating empty for", object.name, object.instance_collection.name, library_collections, combine_mode)
-            collection_name = object.instance_collection.name
-            original_name = object.name
-
-            object.name = original_name + "____bak"
-            empty_obj = make_empty(original_name, object.location, object.rotation_euler, object.scale, destination_collection)
-            """we inject the collection/blueprint name, as a component called 'BlueprintName', but we only do this in the empty, not the original object"""
-            empty_obj['BlueprintName'] = '"'+collection_name+'"' if legacy_mode else '("'+collection_name+'")'
-            empty_obj['SpawnHere'] = '()'
-
-            # we also inject a list of all sub blueprints, so that the bevy side can preload them
-            if not legacy_mode:
-                root_node = CollectionNode()
-                root_node.name = "root"
-                children_per_collection = {}
-                print("collection stuff", original_name)
-                get_sub_collections([object.instance_collection], root_node, children_per_collection)
-                empty_obj["BlueprintsList"] = f"({json.dumps(dict(children_per_collection))})"
-                #empty_obj["Assets"] = {"Animations": [], "Materials": [], "Models":[], "Textures":[], "Audio":[], "Other":[]}
-           
-
-            # we copy custom properties over from our original object to our empty
-            for component_name, component_value in object.items():
-                if component_name not in custom_properties_to_filter_out and is_component_valid(object, component_name): #copy only valid properties
-                    empty_obj[component_name] = component_value
-            if parent_empty is not None:
-                empty_obj.parent = parent_empty
-        else:         
-           
-            # we create a copy of our object and its children, to leave the original one as it is
-            if object.parent == None:
-                copy = duplicate_object_recursive(object, None, destination_collection)
-
-                if parent_empty is not None:
-                    copy.parent = parent_empty                
-
-    # for every sub-collection of the source, copy its content into a new sub-collection of the destination
+        parent = parent_empty
+        duplicate_object(object, parent, combine_mode, destination_collection, library_collections, legacy_mode)
+        
+    # for every child-collection of the source, copy its content into a new sub-collection of the destination
     for collection in source_collection.children:
         original_name = collection.name
         collection.name = original_name + "____bak"
@@ -108,7 +170,6 @@ def copy_hollowed_collection_into(source_collection, destination_collection, par
 
         if parent_empty is not None:
             collection_placeholder.parent = parent_empty
-
         copy_hollowed_collection_into(
             source_collection = collection, 
             destination_collection = destination_collection, 
@@ -117,6 +178,8 @@ def copy_hollowed_collection_into(source_collection, destination_collection, par
             library_collections = library_collections, 
             addon_prefs=addon_prefs
         )
+
+   
     
     return {}
 
@@ -138,14 +201,14 @@ def clear_hollow_scene(temp_scene, original_root_collection):
     # reset original names
     restore_original_names(original_root_collection)
 
-    # remove empties (only needed when we go via ops ????)
+    # remove any data we created
     temp_root_collection = temp_scene.collection 
-    temp_scene_objects = [o for o in temp_root_collection.objects]
+    temp_scene_objects = [o for o in temp_root_collection.all_objects]
     for object in temp_scene_objects:
+        print("removing", object.name)
         bpy.data.objects.remove(object, do_unlink=True)
     # remove the temporary scene
-    bpy.data.scenes.remove(temp_scene)
-
+    bpy.data.scenes.remove(temp_scene, do_unlink=True)
 
 # convenience utility to get lists of scenes
 def get_scenes(addon_prefs):
@@ -159,9 +222,6 @@ def get_scenes(addon_prefs):
     library_scenes = list(map(lambda name: bpy.data.scenes[name], library_scene_names))
     
     return [level_scene_names, level_scenes, library_scene_names, library_scenes]
-
-
-
 
 def inject_blueprints_list_into_main_scene(scene):
     print("injecting assets/blueprints data into scene")

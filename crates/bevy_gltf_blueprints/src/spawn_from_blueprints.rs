@@ -2,7 +2,7 @@ use std::path::{Path, PathBuf};
 
 use bevy::{gltf::Gltf, prelude::*, utils::HashMap};
 
-use crate::{Animations, BluePrintsConfig};
+use crate::{BluePrintsConfig, BlueprintAnimations};
 
 /// this is a flag component for our levels/game world
 #[derive(Component)]
@@ -279,11 +279,12 @@ pub(crate) fn spawn_from_blueprints(
                 transform: transforms,
                 ..Default::default()
             },
-            Animations {
-                named_animations: gltf.named_animations.clone(),
-            },
             Spawned,
             OriginalChildren(original_children),
+            BlueprintAnimations {
+                // these are animations specific to the inside of the blueprint
+                named_animations: gltf.named_animations.clone(),
+            },
         ));
 
         if add_to_world.is_some() {

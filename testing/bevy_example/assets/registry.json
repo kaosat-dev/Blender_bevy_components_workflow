@@ -110,6 +110,19 @@
       "type": "array",
       "typeInfo": "List"
     },
+    "alloc::vec::Vec<bevy_gltf_blueprints::animation::AnimationInfo>": {
+      "isComponent": false,
+      "isResource": false,
+      "items": {
+        "type": {
+          "$ref": "#/$defs/bevy_gltf_blueprints::animation::AnimationInfo"
+        }
+      },
+      "short_name": "Vec<AnimationInfo>",
+      "title": "alloc::vec::Vec<bevy_gltf_blueprints::animation::AnimationInfo>",
+      "type": "array",
+      "typeInfo": "List"
+    },
     "alloc::vec::Vec<bevy_render::color::Color>": {
       "isComponent": false,
       "isResource": false,
@@ -2947,6 +2960,39 @@
       "type": "object",
       "typeInfo": "Struct"
     },
+    "bevy_example::game::animation::Marker1": {
+      "additionalProperties": false,
+      "isComponent": true,
+      "isResource": false,
+      "properties": {},
+      "required": [],
+      "short_name": "Marker1",
+      "title": "bevy_example::game::animation::Marker1",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "bevy_example::game::animation::Marker2": {
+      "additionalProperties": false,
+      "isComponent": true,
+      "isResource": false,
+      "properties": {},
+      "required": [],
+      "short_name": "Marker2",
+      "title": "bevy_example::game::animation::Marker2",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "bevy_example::game::animation::Marker3": {
+      "additionalProperties": false,
+      "isComponent": true,
+      "isResource": false,
+      "properties": {},
+      "required": [],
+      "short_name": "Marker3",
+      "title": "bevy_example::game::animation::Marker3",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
     "bevy_example::test_components::AComponentWithAnExtremlyExageratedOrMaybeNotButCouldBeNameOrWut": {
       "additionalProperties": false,
       "isComponent": true,
@@ -3516,7 +3562,91 @@
       "type": "object",
       "typeInfo": "Struct"
     },
-    "bevy_gltf_blueprints::animation::Animations": {
+    "bevy_gltf_blueprints::animation::AnimationInfo": {
+      "additionalProperties": false,
+      "isComponent": false,
+      "isResource": false,
+      "properties": {
+        "frame_end": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        },
+        "frame_end_override": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        },
+        "frame_start": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        },
+        "frame_start_override": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        },
+        "frames_length": {
+          "type": {
+            "$ref": "#/$defs/f32"
+          }
+        },
+        "name": {
+          "type": {
+            "$ref": "#/$defs/alloc::string::String"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "frame_start",
+        "frame_end",
+        "frames_length",
+        "frame_start_override",
+        "frame_end_override"
+      ],
+      "short_name": "AnimationInfo",
+      "title": "bevy_gltf_blueprints::animation::AnimationInfo",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "bevy_gltf_blueprints::animation::AnimationInfos": {
+      "additionalProperties": false,
+      "isComponent": true,
+      "isResource": false,
+      "properties": {
+        "animations": {
+          "type": {
+            "$ref": "#/$defs/alloc::vec::Vec<bevy_gltf_blueprints::animation::AnimationInfo>"
+          }
+        }
+      },
+      "required": [
+        "animations"
+      ],
+      "short_name": "AnimationInfos",
+      "title": "bevy_gltf_blueprints::animation::AnimationInfos",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "bevy_gltf_blueprints::animation::AnimationMarkers": {
+      "isComponent": true,
+      "isResource": false,
+      "items": false,
+      "prefixItems": [
+        {
+          "type": {
+            "$ref": "#/$defs/bevy_utils::hashbrown::HashMap<alloc::string::String, bevy_utils::hashbrown::HashMap<u32, alloc::vec::Vec<alloc::string::String>, bevy_utils::hashbrown::hash_map::DefaultHashBuilder>, bevy_utils::hashbrown::hash_map::DefaultHashBuilder>"
+          }
+        }
+      ],
+      "short_name": "AnimationMarkers",
+      "title": "bevy_gltf_blueprints::animation::AnimationMarkers",
+      "type": "array",
+      "typeInfo": "TupleStruct"
+    },
+    "bevy_gltf_blueprints::animation::BlueprintAnimations": {
       "additionalProperties": false,
       "isComponent": true,
       "isResource": false,
@@ -3530,8 +3660,27 @@
       "required": [
         "named_animations"
       ],
-      "short_name": "Animations",
-      "title": "bevy_gltf_blueprints::animation::Animations",
+      "short_name": "BlueprintAnimations",
+      "title": "bevy_gltf_blueprints::animation::BlueprintAnimations",
+      "type": "object",
+      "typeInfo": "Struct"
+    },
+    "bevy_gltf_blueprints::animation::InstanceAnimations": {
+      "additionalProperties": false,
+      "isComponent": true,
+      "isResource": false,
+      "properties": {
+        "named_animations": {
+          "type": {
+            "$ref": "#/$defs/bevy_utils::hashbrown::HashMap<alloc::string::String, bevy_asset::handle::Handle<bevy_animation::AnimationClip>, bevy_utils::hashbrown::hash_map::DefaultHashBuilder>"
+          }
+        }
+      },
+      "required": [
+        "named_animations"
+      ],
+      "short_name": "InstanceAnimations",
+      "title": "bevy_gltf_blueprints::animation::InstanceAnimations",
       "type": "object",
       "typeInfo": "Struct"
     },
@@ -10860,6 +11009,32 @@
       "isResource": false,
       "short_name": "HashMap<String, Vec<String>, DefaultHashBuilder>",
       "title": "bevy_utils::hashbrown::HashMap<alloc::string::String, alloc::vec::Vec<alloc::string::String>, bevy_utils::hashbrown::hash_map::DefaultHashBuilder>",
+      "type": "object",
+      "typeInfo": "Map"
+    },
+    "bevy_utils::hashbrown::HashMap<alloc::string::String, bevy_utils::hashbrown::HashMap<u32, alloc::vec::Vec<alloc::string::String>, bevy_utils::hashbrown::hash_map::DefaultHashBuilder>, bevy_utils::hashbrown::hash_map::DefaultHashBuilder>": {
+      "additionalProperties": {
+        "type": {
+          "$ref": "#/$defs/bevy_utils::hashbrown::HashMap<u32, alloc::vec::Vec<alloc::string::String>, bevy_utils::hashbrown::hash_map::DefaultHashBuilder>"
+        }
+      },
+      "isComponent": false,
+      "isResource": false,
+      "short_name": "HashMap<String, HashMap<u32, Vec<String>, DefaultHashBuilder>, DefaultHashBuilder>",
+      "title": "bevy_utils::hashbrown::HashMap<alloc::string::String, bevy_utils::hashbrown::HashMap<u32, alloc::vec::Vec<alloc::string::String>, bevy_utils::hashbrown::hash_map::DefaultHashBuilder>, bevy_utils::hashbrown::hash_map::DefaultHashBuilder>",
+      "type": "object",
+      "typeInfo": "Map"
+    },
+    "bevy_utils::hashbrown::HashMap<u32, alloc::vec::Vec<alloc::string::String>, bevy_utils::hashbrown::hash_map::DefaultHashBuilder>": {
+      "additionalProperties": {
+        "type": {
+          "$ref": "#/$defs/alloc::vec::Vec<alloc::string::String>"
+        }
+      },
+      "isComponent": false,
+      "isResource": false,
+      "short_name": "HashMap<u32, Vec<String>, DefaultHashBuilder>",
+      "title": "bevy_utils::hashbrown::HashMap<u32, alloc::vec::Vec<alloc::string::String>, bevy_utils::hashbrown::hash_map::DefaultHashBuilder>",
       "type": "object",
       "typeInfo": "Map"
     },
