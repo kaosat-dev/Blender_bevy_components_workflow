@@ -69,10 +69,15 @@ impl CopyComponents {
                     }
                 })
                 .map(|type_id| {
-                    return (
-                        type_id.data::<ReflectComponent>().unwrap().clone(),
-                        type_id.type_info().type_id(), // we need the original type_id down the line
-                    );
+                    match type_id.data::<ReflectComponent>() {
+                        Some(data) => (
+                            data.clone(),
+                            type_id.type_info().type_id(), // we need the original type_id down the line
+                        ),
+                        None => {
+                            panic!("type {:?}'s ReflectComponent data was not found in the type registry, this could be because the type is missing a #[reflect(Component)]", type_id.type_info().type_path());
+                        }
+                    }
                 })
                 .collect::<Vec<_>>()
         };
