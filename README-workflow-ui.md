@@ -4,11 +4,11 @@ The workflow goes as follows (once you got your Bevy code setup)
 
 ## Bevy side
 - create & register all your components you want to be able to set from the Blender side (this is basic Bevy, no specific work needed)
-- follow the instructions in the [bevy_registry_export](./crates/bevy_registry_export/) to generate a registry export
+- follow the instructions in the [blenvy](./crates/blenvy/) to generate a registry export
 
 ## Component creation
 
-Setup the Blender [bevy_components](./tools/bevy_components/README.md) add-on
+Setup the Blender [Blenvy](./tools/blenvy/README.md) blender add-on
 to add & edit your components visually & reliably
 
 ![bevy_components](./docs/bevy_components.png)
@@ -22,7 +22,7 @@ to add & edit your components visually & reliably
         - custom properties
         - cameras & lights if you want a complete level (as in this example)
         ![gltf_export](./docs/gltf_export.png)
-    - or much better, using [gltf_auto_export](./tools/gltf_auto_export/)
+    - or much better, using [blenvy](./tools/blenvy/)
 
 ## Now use your gltf files in Bevy
 

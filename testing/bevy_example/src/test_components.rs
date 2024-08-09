@@ -1,3 +1,4 @@
+use crate::dupe_components;
 use bevy::{
     pbr::{ExtendedMaterial, MaterialExtension},
     prelude::*,
@@ -118,6 +119,10 @@ pub struct VecOfColors(Vec<Color>);
 
 #[derive(Component, Reflect, Default, Debug)]
 #[reflect(Component)]
+pub struct VecOfUints(Vec<u32>);
+
+#[derive(Component, Reflect, Default, Debug)]
+#[reflect(Component)]
 pub struct AAAAddedCOMPONENT;
 
 #[derive(Component, Reflect, Default, Debug)]
@@ -151,6 +156,79 @@ impl MaterialExtension for MyExtension {
     }
 }
 
+use bevy::utils::HashMap;
+
+#[derive(Component, Reflect, Default, Debug)]
+#[reflect(Component)]
+pub struct HashmapTestSimple {
+    pub named_animations: HashMap<String, String>,
+}
+
+#[derive(Component, Reflect, Default, Debug)]
+#[reflect(Component)]
+pub struct HashmapTestStringFloat {
+    pub named_animations: HashMap<String, f32>,
+}
+
+#[derive(Component, Reflect, Default, Debug)]
+#[reflect(Component)]
+pub struct HashmapTestIntString {
+    pub named_animations: HashMap<u32, String>,
+}
+
+#[derive(Component, Reflect, Default, Debug)]
+#[reflect(Component)]
+pub struct HashmapTestIntColor {
+    pub inner: HashMap<u32, Color>,
+}
+
+#[derive(Component, Reflect, Default, Debug)]
+#[reflect(Component)]
+pub struct HashmapTestStringColor {
+    pub inner: HashMap<String, Color>,
+}
+
+#[derive(Component, Reflect, Default, Debug)]
+#[reflect(Component)]
+pub struct HashmapTestStringEnum {
+    pub inner: HashMap<String, EnumComplex>,
+}
+
+#[derive(Component, Reflect, Default, Debug)]
+#[reflect(Component)]
+pub struct HashmapTestStringStruct {
+    pub inner: HashMap<String, BasicTest>,
+}
+
+#[derive(Component, Reflect, Default, Debug)]
+#[reflect(Component)]
+pub struct HashmapTestStringColorFlat(HashMap<String, Color>);
+
+#[derive(Component, Reflect, Default, Debug)]
+#[reflect(Component)]
+pub struct ComponentAToFilterOut;
+
+#[derive(Component, Reflect, Default, Debug)]
+#[reflect(Component)]
+pub struct ComponentBToFilterOut;
+
+#[derive(Component, Reflect, Default, Debug)]
+#[reflect(Component)]
+pub struct ComponentWithFieldsOfIdenticalType {
+    pub first: f32,
+    pub second: f32,
+    pub third: Vec<f32>,
+    pub fourth: Vec<f32>,
+}
+#[derive(Component, Reflect, Default, Debug)]
+#[reflect(Component)]
+pub struct ComponentWithFieldsOfIdenticalType2(f32, f32, f32);
+
+#[derive(Debug, Clone, Copy, PartialEq, Reflect, Component)]
+#[reflect(Component)]
+pub enum RedirectPropHitImpulse {
+    Local(Vec3),
+}
 pub struct ComponentsTestPlugin;
 impl Plugin for ComponentsTestPlugin {
     fn build(&self, app: &mut App) {
@@ -164,6 +242,7 @@ impl Plugin for ComponentsTestPlugin {
             .register_type::<TupleVec2>()
             .register_type::<TupleVec3>()
             .register_type::<EnumTest>()
+            .register_type::<dupe_components::EnumTest>()
             .register_type::<TupleTestColor>()
             .register_type::<TupleVec>()
             .register_type::<Vec<String>>()
@@ -181,8 +260,29 @@ impl Plugin for ComponentsTestPlugin {
             .register_type::<Range<f32>>()
             .register_type::<VecOfF32s>()
             .register_type::<Vec<f32>>()
+            .register_type::<u32>()
+            .register_type::<Vec<u32>>()
+            .register_type::<VecOfUints>()
             // .register_type::<AAAAddedCOMPONENT>()
             .register_type::<AComponentWithAnExtremlyExageratedOrMaybeNotButCouldBeNameOrWut>()
+            .register_type::<HashMap<String, String>>()
+            .register_type::<HashmapTestSimple>()
+            .register_type::<HashMap<String, f32>>()
+            .register_type::<HashmapTestStringFloat>()
+            .register_type::<HashMap<u32, String>>()
+            .register_type::<HashmapTestIntString>()
+            .register_type::<HashMap<u32, Color>>()
+            .register_type::<HashmapTestIntColor>()
+            .register_type::<HashMap<String, Color>>()
+            .register_type::<HashmapTestStringColor>()
+            .register_type::<HashmapTestStringColorFlat>()
+            .register_type::<HashmapTestStringEnum>()
+            .register_type::<HashmapTestStringStruct>()
+            .register_type::<ComponentAToFilterOut>()
+            .register_type::<ComponentBToFilterOut>()
+            .register_type::<ComponentWithFieldsOfIdenticalType>()
+            .register_type::<ComponentWithFieldsOfIdenticalType2>()
+            .register_type::<RedirectPropHitImpulse>()
             .add_plugins(MaterialPlugin::<
                 ExtendedMaterial<StandardMaterial, MyExtension>,
             >::default());

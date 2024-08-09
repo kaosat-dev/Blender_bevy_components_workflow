@@ -1,0 +1,11 @@
+[package]
+name = "blenvy_demo"
+version = "0.3.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+bevy = { version = "0.14", features = ["dynamic_linking"] }
+blenvy = { path = "../../crates/blenvy" }
+bevy_rapier3d = { version = "0.25.0", features = ["serde-serialize", "debug-render-3d", "enhanced-determinism"] }
+rand = "0.8.5"

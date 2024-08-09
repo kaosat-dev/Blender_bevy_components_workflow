@@ -13,11 +13,11 @@ def test_generate_example_gltf_files():
 
 if __name__ == "__main__":
     examples = [
-        '../examples/bevy_gltf_blueprints/basic',
-        """'../examples/bevy_gltf_blueprints/animation',
-        '../examples/bevy_gltf_blueprints/basic_xpbd_physics',
-        '../examples/bevy_gltf_blueprints/materials',
-        '../examples/bevy_gltf_blueprints/multiple_levels_multiple_blendfiles',"""
+        '../examples/blenvy/basic',
+        """'../examples/blenvy/animation',
+        '../examples/blenvy/basic_xpbd_physics',
+        '../examples/blenvy/materials',
+        '../examples/blenvy/multiple_levels_multiple_blendfiles',"""
     ]
 
     for example_path in examples:

@@ -1,8 +1,11 @@
+use crate::{GameState, InAppRunning};
 use bevy::prelude::*;
-use bevy_gltf_blueprints::{BluePrintBundle, BlueprintName, GameWorldTag};
-use bevy_gltf_worlflow_examples_common_rapier::{GameState, InAppRunning};
+use blenvy::{
+    AddToGameWorld, BluePrintBundle, BlueprintInfo, DynamicBlueprintInstance, GameWorldTag,
+    HideUntilReady, SpawnBlueprint,
+};
 
-use bevy_rapier3d::prelude::Velocity;
+//use bevy_rapier3d::prelude::Velocity;
 use rand::Rng;
 
 pub fn setup_game(
@@ -12,14 +15,13 @@ pub fn setup_game(
 ) {
     // here we actually spawn our game world/level
     commands.spawn((
-        SceneBundle {
-            scene: asset_server.load("models/World.glb#Scene0"),
-            ..default()
-        },
-        bevy::prelude::Name::from("world"),
+        BlueprintInfo::from_path("levels/World.glb"),
+        HideUntilReady,
+        SpawnBlueprint,
         GameWorldTag,
         InAppRunning,
     ));
+
     next_game_state.set(GameState::InGame)
 }
 
@@ -33,7 +35,7 @@ pub fn spawn_test(
 
     mut game_world: Query<(Entity, &Children), With<GameWorldTag>>,
 ) {
-    if keycode.just_pressed(KeyCode::KeyT) {
+    if keycode.just_pressed(KeyCode::KeyS) {
         let world = game_world.single_mut();
         let world = world.1[0];
 
@@ -53,19 +55,23 @@ pub fn spawn_test(
         let new_entity = commands
             .spawn((
                 BluePrintBundle {
-                    blueprint: BlueprintName("Health_Pickup".to_string()),
+                    blueprint: BlueprintInfo {
+                        name: "spawned".into(),
+                        path: "blueprints/Blueprint 3.gltf".into(),
+                    }, // FIXME
                     ..Default::default()
                 },
+                DynamicBlueprintInstance,
                 bevy::prelude::Name::from(format!("test{}", name_index)),
-                // BlueprintName("Health_Pickup".to_string()),
-                // SpawnHere,
+                HideUntilReady,
+                AddToGameWorld,
                 TransformBundle::from_transform(Transform::from_xyz(x, 2.0, y)),
-                Velocity {
+                /*Velocity {
                     linvel: Vec3::new(vel_x, vel_y, vel_z),
                     angvel: Vec3::new(0.0, 0.0, 0.0),
-                },
+                },*/
             ))
             .id();
-        commands.entity(world).add_child(new_entity);
+        //commands.entity(world).add_child(new_entity);
     }
 }

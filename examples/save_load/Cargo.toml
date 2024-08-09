@@ -1,0 +1,18 @@
+[package]
+name = "bevy_gltf_save_load_basic_example"
+version = "0.3.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+bevy = { version = "0.14", features = ["dynamic_linking"] }
+blenvy = { path = "../../crates/blenvy" }
+
+serde_json = "1.0.108"
+serde = "1.0.193"
+rand = "0.8.5"
+
+bevy-inspector-egui = { version = "0.25.1"}
+
+[dev-dependencies]
+bevy-inspector-egui = { version = "0.25.1"}

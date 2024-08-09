@@ -1,4 +1,4 @@
 # Examples
 
-This folder contains numerous examples showing how to use both bevy_gltf_components and bevy_gltf_blueprints. 
-Each example is its own crate so its dependencies are specific & clear.
+This folder contains numerous examples showing how to use Blenvy
+Each example is its own crate so its dependencies and assets are specific & clear.

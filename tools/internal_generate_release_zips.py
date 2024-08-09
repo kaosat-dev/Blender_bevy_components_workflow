@@ -21,8 +21,6 @@ def zipdir(path, ziph):
                         os.path.relpath(os.path.join(root, file), 
                                         os.path.join(path, '..')))
 
-with zipfile.ZipFile("bevy_components.zip", mode="w", compression=zipfile.ZIP_DEFLATED) as archive:
-    zipdir('./bevy_components', archive)
+with zipfile.ZipFile("blenvy.zip", mode="w", compression=zipfile.ZIP_DEFLATED) as archive:
+    zipdir('./blenvy', archive)
 
-with zipfile.ZipFile("gltf_auto_export.zip", mode="w", compression=zipfile.ZIP_DEFLATED) as archive:
-    zipdir('./gltf_auto_export', archive)

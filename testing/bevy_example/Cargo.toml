@@ -6,11 +6,10 @@ license = "MIT OR Apache-2.0"
 
 [dependencies]
 bevy = { version = "0.14", features = ["dynamic_linking"] }
-bevy_gltf_blueprints = { path = "../../crates/bevy_gltf_blueprints" }
-bevy_registry_export = { path = "../../crates/bevy_registry_export" }
-bevy_gltf_worlflow_examples_common_rapier = { path = "../../examples/common_rapier" }
-
-bevy_rapier3d = { version = "0.27.0", features = ["serde-serialize", "debug-render-3d", "enhanced-determinism"] }
-bevy_asset_loader = { version = "0.21", features = ["standard_dynamic_assets"] }
+blenvy = { path = "../../crates/blenvy" }
 #bevy_editor_pls = { version = "0.8" }
 rand = "0.8.5"
+json-writer ="0.3"
+
+[dev-dependencies]
+bevy-inspector-egui = { version = "0.25.1"}

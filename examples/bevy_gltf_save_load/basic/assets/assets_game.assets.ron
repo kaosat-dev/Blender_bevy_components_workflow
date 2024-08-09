@@ -1,8 +1,0 @@
-({
-    "world":File (path: "models/World.glb"),
-    "world_dynamic":File (path: "models/World_dynamic.glb"),
-
-    "models": Folder (
-        path: "models/library",
-    ),
-})

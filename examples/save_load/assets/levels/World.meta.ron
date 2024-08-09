@@ -1,0 +1,13 @@
+(
+  assets:
+   [ 
+    ("Pillar", File ( path: "blueprints/Pillar.glb" )),
+    ("Stone", File ( path: "materials/Stone.glb" )),
+    ("Mover", File ( path: "blueprints/Mover.glb" )),
+    ("Material.001", File ( path: "materials/Material.001.glb" )),
+    ("Dynamic_hierarchy", File ( path: "blueprints/Dynamic_hierarchy.glb" )),
+    ("Dynamic_inside_static", File ( path: "blueprints/Dynamic_inside_static.glb" )),
+    ("Mover", File ( path: "blueprints/Mover.glb" )),
+    ("Material.001", File ( path: "materials/Material.001.glb" )),
+   ]
+)

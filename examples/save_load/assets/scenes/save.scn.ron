@@ -1,0 +1,300 @@
+(
+  resources: {
+    "bevy_time::time::Time<()>": (
+      context: (),
+      wrap_period: (
+        secs: 3600,
+        nanos: 0,
+      ),
+      delta: (
+        secs: 0,
+        nanos: 20094396,
+      ),
+      delta_seconds: 0.020094397,
+      delta_seconds_f64: 0.020094396,
+      elapsed: (
+        secs: 1,
+        nanos: 493224348,
+      ),
+      elapsed_seconds: 1.4932244,
+      elapsed_seconds_f64: 1.493224348,
+      elapsed_wrapped: (
+        secs: 1,
+        nanos: 493224348,
+      ),
+      elapsed_seconds_wrapped: 1.4932244,
+      elapsed_seconds_wrapped_f64: 1.493224348,
+    ),
+    "bevy_time::time::Time<bevy_time::virt::Virtual>": (
+      context: (
+        max_delta: (
+          secs: 0,
+          nanos: 250000000,
+        ),
+        paused: false,
+        relative_speed: 1.0,
+        effective_speed: 1.0,
+      ),
+      wrap_period: (
+        secs: 3600,
+        nanos: 0,
+      ),
+      delta: (
+        secs: 0,
+        nanos: 20094396,
+      ),
+      delta_seconds: 0.020094397,
+      delta_seconds_f64: 0.020094396,
+      elapsed: (
+        secs: 1,
+        nanos: 493224348,
+      ),
+      elapsed_seconds: 1.4932244,
+      elapsed_seconds_f64: 1.493224348,
+      elapsed_wrapped: (
+        secs: 1,
+        nanos: 493224348,
+      ),
+      elapsed_seconds_wrapped: 1.4932244,
+      elapsed_seconds_wrapped_f64: 1.493224348,
+    ),
+    "bevy_time::time::Time<bevy_time::fixed::Fixed>": (
+      context: (
+        timestep: (
+          secs: 0,
+          nanos: 15625000,
+        ),
+        overstep: (
+          secs: 0,
+          nanos: 8849348,
+        ),
+      ),
+      wrap_period: (
+        secs: 3600,
+        nanos: 0,
+      ),
+      delta: (
+        secs: 0,
+        nanos: 15625000,
+      ),
+      delta_seconds: 0.015625,
+      delta_seconds_f64: 0.015625,
+      elapsed: (
+        secs: 1,
+        nanos: 484375000,
+      ),
+      elapsed_seconds: 1.484375,
+      elapsed_seconds_f64: 1.484375,
+      elapsed_wrapped: (
+        secs: 1,
+        nanos: 484375000,
+      ),
+      elapsed_seconds_wrapped: 1.484375,
+      elapsed_seconds_wrapped_f64: 1.484375,
+    ),
+    "bevy_render::camera::clear_color::ClearColor": (Srgba((
+      red: 0.16862746,
+      green: 0.17254902,
+      blue: 0.18431373,
+      alpha: 1.0,
+    ))),
+    "bevy_render::view::Msaa": Sample4,
+    "bevy_pbr::light::ambient_light::AmbientLight": (
+      color: LinearRgba((
+        red: 1.0,
+        green: 1.0,
+        blue: 1.0,
+        alpha: 1.0,
+      )),
+      brightness: 80.0,
+    ),
+    "bevy_pbr::light::DirectionalLightShadowMap": (
+      size: 2048,
+    ),
+    "bevy_pbr::light::PointLightShadowMap": (
+      size: 1024,
+    ),
+    "bevy_audio::audio::GlobalVolume": (
+      volume: (1.0),
+    ),
+    "bevy_audio::audio::DefaultSpatialScale": (((
+      x: 1.0,
+      y: 1.0,
+      z: 1.0,
+    ))),
+    "bevy_gizmos::config::GizmoConfigStore": (),
+  },
+  entities: {
+    4294967311: (
+      components: {
+        "bevy_transform::components::transform::Transform": (
+          translation: (
+            x: -2.217765,
+            y: 1.2997229,
+            z: 2.3971958,
+          ),
+          rotation: (
+            x: 0.10570976,
+            y: 0.038342018,
+            z: 0.09289465,
+            w: 0.9893058,
+          ),
+          scale: (
+            x: 0.53947395,
+            y: 0.53947395,
+            z: 0.5394739,
+          ),
+        ),
+        "bevy_transform::components::global_transform::GlobalTransform": ((
+          matrix3: (
+            x_axis: (
+              x: 0.5285771,
+              y: 0.10352973,
+              z: -0.030331498,
+            ),
+            y_axis: (
+              x: -0.094783515,
+              y: 0.5181065,
+              z: 0.11667855,
+            ),
+            z_axis: (
+              x: 0.051521756,
+              y: -0.10899262,
+              z: 0.5258309,
+            ),
+          ),
+          translation: (
+            x: -2.2227652,
+            y: 1.2997229,
+            z: 2.3971958,
+          ),
+        )),
+        "blenvy::blueprints::spawn_from_blueprints::BlueprintInfo": (
+          name: "Dynamic_hierarchy",
+          path: "blueprints/Dynamic_hierarchy.glb",
+        ),
+        "bevy_core::name::Name": (
+          hash: 1803003925387469959,
+          name: "Dynamic_hierarchy",
+        ),
+        "blenvy::save_load::Dynamic": (),
+        "blenvy::blueprints::spawn_from_blueprints::SpawnBlueprint": (),
+        "bevy_render::view::visibility::InheritedVisibility": (true),
+      },
+    ),
+    4294967312: (
+      components: {
+        "bevy_transform::components::transform::Transform": (
+          translation: (
+            x: 0.2887157,
+            y: 1.19514,
+            z: -0.7909124,
+          ),
+          rotation: (
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+            w: 1.0,
+          ),
+          scale: (
+            x: 1.0,
+            y: 1.0,
+            z: 1.0,
+          ),
+        ),
+        "bevy_transform::components::global_transform::GlobalTransform": ((
+          matrix3: (
+            x_axis: (
+              x: 1.0,
+              y: 0.0,
+              z: 0.0,
+            ),
+            y_axis: (
+              x: 0.0,
+              y: 1.0,
+              z: 0.0,
+            ),
+            z_axis: (
+              x: 0.0,
+              y: 0.0,
+              z: 1.0,
+            ),
+          ),
+          translation: (
+            x: 0.2837157,
+            y: 1.19514,
+            z: -0.7909124,
+          ),
+        )),
+        "blenvy::blueprints::spawn_from_blueprints::BlueprintInfo": (
+          name: "Mover",
+          path: "blueprints/Mover.glb",
+        ),
+        "bevy_core::name::Name": (
+          hash: 3988719516189002069,
+          name: "Mover",
+        ),
+        "blenvy::save_load::Dynamic": (),
+        "blenvy::blueprints::spawn_from_blueprints::SpawnBlueprint": (),
+        "bevy_render::view::visibility::InheritedVisibility": (true),
+      },
+    ),
+    21474836498: (
+      components: {
+        "bevy_transform::components::transform::Transform": (
+          translation: (
+            x: 1.6942285,
+            y: 0.50783855,
+            z: -2.0131574,
+          ),
+          rotation: (
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+            w: 1.0,
+          ),
+          scale: (
+            x: 1.0,
+            y: 1.0,
+            z: 1.0,
+          ),
+        ),
+        "bevy_transform::components::global_transform::GlobalTransform": ((
+          matrix3: (
+            x_axis: (
+              x: 0.6095814,
+              y: 0.1066819,
+              z: -0.10043551,
+            ),
+            y_axis: (
+              x: -0.08811652,
+              y: 0.6102711,
+              z: 0.113412924,
+            ),
+            z_axis: (
+              x: 0.11706323,
+              y: -0.096156046,
+              z: 0.60836506,
+            ),
+          ),
+          translation: (
+            x: -1.6649909,
+            y: 1.184185,
+            z: 2.0619445,
+          ),
+        )),
+        "blenvy::blueprints::spawn_from_blueprints::BlueprintInfo": (
+          name: "Mover",
+          path: "blueprints/Mover.glb",
+        ),
+        "bevy_core::name::Name": (
+          hash: 14976337147749212273,
+          name: "Mover.001",
+        ),
+        "blenvy::save_load::Dynamic": (),
+        "blenvy::blueprints::spawn_from_blueprints::SpawnBlueprint": (),
+        "bevy_render::view::visibility::InheritedVisibility": (true),
+      },
+    ),
+  },
+)
